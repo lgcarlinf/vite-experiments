@@ -1,3 +1,15 @@
-import { createRootRoute } from '@tanstack/react-router'
+import { IPublicClientApplication } from '@azure/msal-browser'
+import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
 
-export const Route = createRootRoute()
+export interface CustomRouterContext {
+    auth: IPublicClientApplication
+  }
+
+  export const Route = createRootRouteWithContext<CustomRouterContext>()({
+    component: () => (
+      <>
+        <Outlet />
+      </>
+    ),
+  })
+  

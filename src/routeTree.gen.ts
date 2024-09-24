@@ -13,29 +13,35 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as NotasIndexImport } from './routes/notas/index'
+import { Route as IndexImport } from './routes/index'
+import { Route as NotesIndexImport } from './routes/notes/index'
+import { Route as LoginIndexImport } from './routes/login/index'
 
 // Create Virtual Routes
 
-const IndexLazyImport = createFileRoute('/')()
-const NotasNuevaLazyImport = createFileRoute('/notas/nueva')()
+const NotesNuevaLazyImport = createFileRoute('/notes/nueva')()
 
 // Create/Update Routes
 
-const IndexLazyRoute = IndexLazyImport.update({
+const IndexRoute = IndexImport.update({
   path: '/',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
-
-const NotasIndexRoute = NotasIndexImport.update({
-  path: '/notas/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const NotasNuevaLazyRoute = NotasNuevaLazyImport.update({
-  path: '/notas/nueva',
+const NotesIndexRoute = NotesIndexImport.update({
+  path: '/notes/',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/notas/nueva.lazy').then((d) => d.Route))
+} as any)
+
+const LoginIndexRoute = LoginIndexImport.update({
+  path: '/login/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const NotesNuevaLazyRoute = NotesNuevaLazyImport.update({
+  path: '/notes/nueva',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/notes/nueva.lazy').then((d) => d.Route))
 
 // Populate the FileRoutesByPath interface
 
@@ -45,21 +51,28 @@ declare module '@tanstack/react-router' {
       id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexLazyImport
+      preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/notas/nueva': {
-      id: '/notas/nueva'
-      path: '/notas/nueva'
-      fullPath: '/notas/nueva'
-      preLoaderRoute: typeof NotasNuevaLazyImport
+    '/notes/nueva': {
+      id: '/notes/nueva'
+      path: '/notes/nueva'
+      fullPath: '/notes/nueva'
+      preLoaderRoute: typeof NotesNuevaLazyImport
       parentRoute: typeof rootRoute
     }
-    '/notas/': {
-      id: '/notas/'
-      path: '/notas'
-      fullPath: '/notas'
-      preLoaderRoute: typeof NotasIndexImport
+    '/login/': {
+      id: '/login/'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/notes/': {
+      id: '/notes/'
+      path: '/notes'
+      fullPath: '/notes'
+      preLoaderRoute: typeof NotesIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -68,43 +81,48 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexLazyRoute
-  '/notas/nueva': typeof NotasNuevaLazyRoute
-  '/notas': typeof NotasIndexRoute
+  '/': typeof IndexRoute
+  '/notes/nueva': typeof NotesNuevaLazyRoute
+  '/login': typeof LoginIndexRoute
+  '/notes': typeof NotesIndexRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexLazyRoute
-  '/notas/nueva': typeof NotasNuevaLazyRoute
-  '/notas': typeof NotasIndexRoute
+  '/': typeof IndexRoute
+  '/notes/nueva': typeof NotesNuevaLazyRoute
+  '/login': typeof LoginIndexRoute
+  '/notes': typeof NotesIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexLazyRoute
-  '/notas/nueva': typeof NotasNuevaLazyRoute
-  '/notas/': typeof NotasIndexRoute
+  '/': typeof IndexRoute
+  '/notes/nueva': typeof NotesNuevaLazyRoute
+  '/login/': typeof LoginIndexRoute
+  '/notes/': typeof NotesIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/notas/nueva' | '/notas'
+  fullPaths: '/' | '/notes/nueva' | '/login' | '/notes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/notas/nueva' | '/notas'
-  id: '__root__' | '/' | '/notas/nueva' | '/notas/'
+  to: '/' | '/notes/nueva' | '/login' | '/notes'
+  id: '__root__' | '/' | '/notes/nueva' | '/login/' | '/notes/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexLazyRoute: typeof IndexLazyRoute
-  NotasNuevaLazyRoute: typeof NotasNuevaLazyRoute
-  NotasIndexRoute: typeof NotasIndexRoute
+  IndexRoute: typeof IndexRoute
+  NotesNuevaLazyRoute: typeof NotesNuevaLazyRoute
+  LoginIndexRoute: typeof LoginIndexRoute
+  NotesIndexRoute: typeof NotesIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexLazyRoute: IndexLazyRoute,
-  NotasNuevaLazyRoute: NotasNuevaLazyRoute,
-  NotasIndexRoute: NotasIndexRoute,
+  IndexRoute: IndexRoute,
+  NotesNuevaLazyRoute: NotesNuevaLazyRoute,
+  LoginIndexRoute: LoginIndexRoute,
+  NotesIndexRoute: NotesIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -120,18 +138,22 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/notas/nueva",
-        "/notas/"
+        "/notes/nueva",
+        "/login/",
+        "/notes/"
       ]
     },
     "/": {
-      "filePath": "index.lazy.tsx"
+      "filePath": "index.tsx"
     },
-    "/notas/nueva": {
-      "filePath": "notas/nueva.lazy.tsx"
+    "/notes/nueva": {
+      "filePath": "notes/nueva.lazy.tsx"
     },
-    "/notas/": {
-      "filePath": "notas/index.tsx"
+    "/login/": {
+      "filePath": "login/index.tsx"
+    },
+    "/notes/": {
+      "filePath": "notes/index.tsx"
     }
   }
 }

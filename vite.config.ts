@@ -14,8 +14,11 @@ export default defineConfig({
         manualChunks:{
           'react': ['react', 'react-dom'],
           'react-router': ['@tanstack/react-router'],
-        }
-      }
+        },
+      },
     }
+  },
+  server:{
+    port: 3000
   }
 })
